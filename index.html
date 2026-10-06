@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命靈數能量九宮格分析儀</title>
+    <!-- 引入 Tailwind CSS 確保視覺美觀 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .circle-marker {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen py-10 px-4">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+        <!-- 頂部橫幅 -->
+        <div class="bg-gradient-to-r #ec4899 via-purple-600 to-indigo-600 p-6 text-center text-white">
+            <h1 class="text-2xl font-bold tracking-wide">生命靈數能量九宮格分析儀</h1>
+            <p class="text-xs text-purple-100 mt-2">解鎖生命藍圖的數字 DNA 密碼</p>
+        </div>
+
+        <div class="p-6">
+            <!-- 輸入區域 -->
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center bg-slate-100 p-4 rounded-xl mb-6">
+                <label for="birthdate" class="font-medium text-slate-700">請選擇西元出生年月日：</label>
+                <input type="date" id="birthdate" class="bg-white border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <button onclick="calculateNumerology()" class="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg transition-colors shadow">
+                    開始分析藍圖
+                </button>
+            </div>
+
+            <!-- 結果顯示區域（預設隱藏） -->
+            <div id="result-section" class="hidden space-y-6">
+                
+                <!-- 數字四大核心指標 -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-pink-50 p-4 rounded-xl border border-pink-100 text-center">
+                        <span class="text-xs text-pink-600 font-bold block mb-1">先天數</span>
+                        <div id="lbl-birth" class="text-sm font-semibold tracking-wider text-slate-700">-</div>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl border border-purple-100 text-center">
+                        <span class="text-xs text-purple-600 font-bold block mb-1">天賦數</span>
+                        <div id="lbl-talent" class="text-lg font-bold text-slate-800">-</div>
+                    </div>
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-center">
+                        <span class="text-xs text-indigo-600 font-bold block mb-1">生命數 (主命數)</span>
+                        <div id="lbl-life" class="text-2xl font-extrabold text-indigo-700">-</div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-center">
+                        <span class="text-xs text-blue-600 font-bold block mb-1">星座數</span>
+                        <div id="lbl-zodiac" class="text-lg font-bold text-slate-800">-</div>
+                    </div>
+                </div>
+
+                <!-- 核心九宮格與連線狀況 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- 九宮格視覺化 (1-4-7 排列式) -->
+                    <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-sm font-bold text-slate-600 mb-4">生命靈數能量九宮格</h3>
+                        <div class="grid grid-cols-3 gap-2 w-full max-w-[280px]">
+                            <!-- 1, 4, 7 -->
+                            <div id="cell-1" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">1</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-4" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">4</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-7" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">7</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <!-- 2, 5, 8 -->
+                            <div id="cell-2" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">2</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-5" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">5</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-8" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">8</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <!-- 3, 6, 9 -->
+                            <div id="cell-3" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">3</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-6" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">6</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                            <div id="cell-9" class="border border-slate-300 h-20 rounded-lg flex flex-col justify-between p-2 relative bg-slate-50">
+                                <span class="text-xs text-slate-400">9</span>
+                                <div class="flex flex-wrap justify-end markers-box"></div>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-3">※ 圈數越多代表該能量強度越高，主命數最具核心影響力。</p>
+                    </div>
+
+                    <!-- 當前連線清單 -->
+                    <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <h3 class="text-sm font-bold text-slate-600 mb-2">已啟動之能量連線</h3>
+                        <div id="active-lines-list" class="space-y-1 max-h-[180px] overflow-y-auto pr-2">
+                            <!-- JS 動態插入 -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="border-slate-200">
+
+                <!-- 能量分析說明報告 -->
+                <div>
+                    <h3 class="text-base font-bold text-slate-700 mb-4 flex items-center gap-2">
+                        <span class="inline-block w-2 h-5 bg-purple-600 rounded"></span>
+                        連線特質詳細解讀報告
+                    </h3>
+                    <div id="explanations-box" class="space-y-4">
+                        <!-- JS 動態插入詳細解讀 -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 星座對應表與星座數定義
+        function getZodiacData(month, day) {
+            const m = parseInt(month);
+            const d = parseInt(day);
+            if ((m == 3 && d >= 21) || (m == 4 && d <= 19)) return { name: "牡羊座", num: 1 };
+            if ((m == 12 && d >= 22) || (m == 1 && d <= 19)) return { name: "摩羯座", num: 1 };
+            if ((m == 4 && d >= 20) || (m == 5 && d <= 20)) return { name: "金牛座", num: 2 };
+            if ((m == 1 && d >= 20) || (m == 2 && d <= 18)) return { name: "水瓶座", num: 2 };
+            if ((m == 5 && d >= 21) || (m == 6 && d <= 21)) return { name: "雙子座", num: 3 };
+            if ((m == 2 && d >= 19) || (m == 3 && d <= 20)) return { name: "雙魚座", num: 3 };
+            if ((m == 6 && d >= 22) || (m == 7 && d <= 22)) return { name: "巨蟹座", num: 4 };
+            if ((m == 7 && d >= 23) || (m == 8 && d <= 22)) return { name: "獅子座", num: 5 };
+            if ((m == 8 && d >= 23) || (m == 9 && d <= 22)) return { name: "處女座", num: 6 };
+            if ((m == 9 && d >= 23) || (m == 10 && d <= 23)) return { name: "天秤座", num: 7 };
+            if ((m == 10 && d >= 24) || (m == 11 && d <= 21)) return { name: "天蠍座", num: 8 };
+            if ((m == 11 && d >= 22) || (m == 12 && d <= 21)) return { name: "射手座", num: 9 };
+            return { name: "未知", num: 0 };
+        }
+
+        // 完整連線知識庫
+        const linesDatabase = [
+            { id: "147", name: "147連線 (主導執行力/務實線)", type: "line", digits: [1, 4, 7], desc: "天生就充滿行動力，與生俱來的生存本能讓你們的執行能力相較於其他人高。你們了解只有想像沒有行動不會邁向目標，因此字典裡面沒有所謂「做白日夢」四個字，相信扎實、實際的付出才能獲得美好的成果（包含穩定的金錢來源或豐沃財富）。" },
+            { id: "258", name: "258連線 (主導心智力)", type: "line", digits: [2, 5, 8], desc: "天生擅長並勇於表達內心的想法，具備了堅強的心智，會主動追求夢想且願意嘗試各種能幫助達到目標的機會。具備極佳的文字、表達與良好的藝術感受力，絕對是具備浪漫的情感特質。" },
+            { id: "369", name: "369連線 (主導創意力/智慧線)", type: "line", digits: [3, 6, 9], desc: "此線也稱之為「智慧線」，具有靈性本質的代表。除了具備智慧，更擁有深層思考能力與善良本質，新認識的對象也很容易向你們靠攏。擅長用不同切角和面向來觀察與闡述事情，分享經常讓人有醍醐灌頂的強烈感受，且能用輕鬆舒服的方式去引導身旁的人。" },
+            { id: "123", name: "123連線 (主導藝術力)", type: "line", digits: [1, 2, 3], desc: "主導一個人的藝術感受力，對於新資訊的接受度高，對美和藝術相關事務的感知力也相當豐沛。屬於感官性的生物，容易在嘗鮮新奇事物的過程中產生強烈滿足感，更能感受到自己是真實地活著。" },
+            { id: "456", name: "456連線 (主導組織規劃力)", type: "line", digits: [4, 5, 6], desc: "意謂著主導一個人的組織執行線。做事總是井然有序，相當善於統籌、計畫事務與解決問題。加上善解人意的特質，容易成為組織團體中的意見領袖，讓同仁願意聽從並遵循計劃朝著同樣的目標努力邁進。" },
+            { id: "789", name: "789連線 (主導貴人與財務管理力/權力線)", type: "line", digits: [7, 8, 9], desc: "此線也稱之為「權力線」，代表相對擁有掌控週遭人們的力量。這來自於與生俱來的聰穎天賦、細膩規劃，搭配大方的態度，很容易成為一個群體中的領頭羊。充滿魅力的人格特質更讓身旁聚集許多貴人相助，令事情成果以倍增形式回饋。" },
+            { id: "357", name: "357連線 (主導好人緣運/溝通線)", type: "line", digits: [3, 5, 7], desc: "也稱之為溝通線和人緣線，具有面面俱到、八面玲瓏的特質。默默散發出旁人沒有的魅力（結合冒險勇氣、靈性魅力以及熱誠善良的本性），搭配絕佳運氣和高直覺度。大膽且不畏懼地表達想法，若在藝術、銷售或政治領域發展，必定會是備受矚目的佼佼者。" },
+            { id: "159", name: "159連線 (主導堅持力/事業線)", type: "line", digits: [1, 5, 9], desc: "也稱之為「執著成效線」或「執行線」。在職場或生活上的執行能力相對極強，先決條件是必須為其富有熱情和興趣的事務。決定要嘗試便會一股腦做到底，不在乎時間、金錢成本。經過歲月失敗經驗的累積後，更能將執著轉換為達到有效成果的事業線，成為職場佼佼者。" },
+            { id: "42", name: "42菱形連線 (主導精簡和優化能力/靈巧線)", type: "diamond", digits: [4, 2], desc: "也稱之為靈巧線，意涵著相當聰敏、反應快、不拖泥帶水，能舉一反三。可以快速經由觀察和吸取別人的經驗後，昇華成自己的做法。本質上非常不喜歡浪費未經評估的時間，相信事事都要經過分析和結合他人的經驗才會是最佳的高效率捷徑。" },
+            { id: "48", name: "48菱形連線 (主導勤勞力)", type: "diamond", digits: [4, 8], desc: "也稱之為勤勞線，具有閒不下來的特質。放假時也希望將自己的時間塞滿去多看、多聽、多學習；在財務操作上，由於 4 和 8 兩個數字都屬於高執行力卻喜歡穩紮穩打的方式，因此會傾向進行低風險、投資報酬率穩健開拓的投資以提升財務安全感。" },
+            { id: "62", name: "62菱形連線 (主導和平力/暖心線)", type: "diamond", digits: [6, 2], desc: "也稱之為和平線或暖心線。這兩個數字都具有暖心和體貼的特質，擁有此連線的人常有個特點就是「報喜不報憂」，即便在分享悲傷的事情時也採用一種雲淡風輕的態度，希望創造出來的氛圍都是正能量。" },
+            { id: "68", name: "68菱形連線 (主導誠誠力/誠實線)", type: "diamond", digits: [6, 8], desc: "也稱之為「誠實線」。非常積極上進且在意他人的看法，不喜歡任何人對他們有所誤解，是非同尋常的真實與誠實之人。個性親切溫暖，對認定的人特別好，當自己用真誠對待他人時，也同樣期待能獲得相對的回應。" }
+        ];
+
+        function calculateNumerology() {
+            const dateInput = document.getElementById("birthdate").value;
+            if (!dateInput) {
+                alert("請先選擇正確的出生年月日。");
+                return;
+            }
+
+            // 解析年月日字串
+            const [year, month, day] = dateInput.split("-");
+            const combinedStr = year + month + day;
+            const digits = combinedStr.split("").map(Number);
+
+            // 1. 先天數（排除數字0，因九宮格無0）
+            const birthNums = digits.filter(n => n > 0);
+            
+            // 2. 天賦數與生命數計算
+            const sum1 = digits.reduce((acc, curr) => acc + curr, 0);
+            let talentNums = [];
+            let lifeNum = 0;
+
+            if (sum1 >= 10) {
+                // 若首輪加總為雙位數，即為天賦數
+                talentNums = String(sum1).split("").map(Number);
+                // 再次加總求得主命數
+                const sum2 = talentNums.reduce((acc, curr) => acc + curr, 0);
+                if (sum2 >= 10) {
+                    // 極少數情況再次加總 (例如 1999-09-29 -> 48 -> 12 -> 3)
+                    const tempTalent = String(sum2).split("").map(Number);
+                    lifeNum = tempTalent.reduce((acc, curr) => acc + curr, 0);
+                } else {
+                    lifeNum = sum2;
+                }
+            } else {
+                // 若首輪加總即為個位數
+                talentNums = [sum1];
+                lifeNum = sum1;
+            }
+
+            // 3. 星座數
+            const zodiacInfo = getZodiacData(month, day);
+            const zodiacNum = zodiacInfo.num;
+
+            // 介面指標數據更新
+            document.getElementById("lbl-birth").innerText = birthNums.join("、");
+            document.getElementById("lbl-talent").innerText = talentNums.join(" 跟 ");
+            document.getElementById("lbl-life").innerText = lifeNum;
+            document.getElementById("lbl-zodiac").innerText = `${zodiacInfo.name} (${zodiacNum})`;
+
+            // 4. 九宮格計數統計庫清空與填入
+            const counts = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0 };
+            
+            // 填入先天數
+            birthNums.forEach(n => { if(counts[n] !== undefined) counts[n]++; });
+            // 填入天賦數
+            talentNums.forEach(n => { if(counts[n] !== undefined) counts[n]++; });
+            // 填入生命數
+            if(counts[lifeNum] !== undefined) counts[lifeNum]++;
+            // 填入星座數
+            if(counts[zodiacNum] !== undefined) counts[zodiacNum]++;
+
+            // 5. 渲染九宮格視覺標記 ( circles )
+            for (let i = 1; i <= 9; i++) {
+                const cell = document.getElementById(`cell-${i}`);
+                const markerBox = cell.querySelector(".markers-box");
+                markerBox.innerHTML = ""; // 清空舊資料
+                
+                const currentCount = counts[i];
+                for (let c = 0; c < currentCount; c++) {
+                    const span = document.createElement("span");
+                    span.className = "circle-marker";
+                    markerBox.appendChild(span);
+                }
+            }
+
+            // 6. 連線判定與說明生成
+            let activeLines = [];
+            let explanationsHtml = "";
+
+            linesDatabase.forEach(line => {
+                // 檢查該連線所需的所有數字是否皆有出現過 (count >= 1)
+                const isActivated = line.digits.every(d => counts[d] > 0);
+                if (isActivated) {
+                    activeLines.push(line);
+                    explanationsHtml += `
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                            <h4 class="font-bold text-purple-700 text-sm mb-1">${line.name}</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">${line.desc}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            // 7. 特殊無連線或全連線配套機制說明
+            if (activeLines.length === 0) {
+                explanationsHtml = `
+                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <h4 class="font-bold text-amber-800 text-sm mb-1">當前未形成顯性連線</h4>
+                        <p class="text-xs text-amber-700 leading-relaxed">
+                            即使沒有任何連線也不用擔心，這只是表示你在該特質層面不會那麼外顯，不代表你相對其他人較弱勢。你將展現出較多來自於 1-9 中獨立出現的數字或出現圈圈較多之數字能量，亦可從空缺數剖析深層內在想法。
+                        </p>
+                    </div>
+                `;
+                document.getElementById("active-lines-list").innerHTML = `<span class="text-xs text-slate-400 italic">當前無成立連線</span>`;
+            } else {
+                // 渲染右側快速對照清單
+                let listHtml = "";
+                activeLines.forEach(l => {
+                    listHtml += `<div class="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded border border-purple-100 font-medium">✓ ${l.name}</div>`;
+                });
+                document.getElementById("active-lines-list").innerHTML = listHtml;
+
+                // 若全連線判定 (本系統收錄共 12 條連線，實務上全連線指 8 條主軸線或高度重疊狀態)
+                // 此處提供理論全數值飽和時之追加備註
+                const mainLinesCount = activeLines.filter(l => l.type === "line").length;
+                if (mainLinesCount >= 8) {
+                    explanationsHtml += `
+                        <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl mt-3">
+                            <h4 class="font-bold text-indigo-800 text-sm mb-1">★ 隱藏成就：具備全連線/多重高階連線特質</h4>
+                            <p class="text-xs text-indigo-700 leading-relaxed">
+                                擁有全連線的人代表著會有相對較多的選擇權，因為你們通常只要願意，基本上過程或結果都較為順遂。年少時期在人際、貴人資源上擁有較隨心所欲的運氣；來到中年時期，若在年輕時有在某一領域長期累積專業能力，通常都會成為佼佼者。但提示您：仍需靠努力與扎根才能將此先天優勢完美突顯。
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+
+            // 將結果區塊顯現
+            document.getElementById("explanations-box").innerHTML = explanationsHtml;
+            document.getElementById("result-section").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
